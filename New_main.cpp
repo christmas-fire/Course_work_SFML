@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <vector>
+#include <sstream>
 
     // Библиотеки C
 #include <stdlib.h>
@@ -11,36 +12,8 @@
 using namespace std;
 using namespace sf;
 
-    // Создаем окно
-static void initWindow(RenderWindow& window, int width, int height) {
-    window.create(VideoMode(width, height), L"Курсовая работа: Змейка");
-    window.setVerticalSyncEnabled(true);
-    window.setFramerateLimit(60);
-}
-
-    // Задаем иконку
-static void setIcon(Image& icon, RenderWindow& window) {
-    if (!icon.loadFromFile("Icons/icon.png")) {
-        cerr << "Не загрузились иконки!" << endl;
-    }
-    window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
-}
-
-    // Задаем текстуры
-static void setTextures(Texture& texture_apple,
-                        Texture& texture_strawberry,
-                        Texture& texture_snake_head,
-                        Texture& texture_snake_part
-                        ) 
-{
-    if (!texture_apple.loadFromFile("Sprites/apple.png") ||
-        !texture_strawberry.loadFromFile("Sprites/strawberry.png") ||
-        !texture_snake_head.loadFromFile("Sprites/snake_head.png") ||
-        !texture_snake_part.loadFromFile("Sprites/snake_part.png"))
-    {
-        cerr << "Не загрузились текстуры!" << endl;
-    }
-}
+    // Заголовочные файлы
+#include <set_functions.h>    
 
     // Генерируем случайные координаты
 static int genRandCords(int window_side, int size) {
@@ -51,7 +24,7 @@ int main() {
     // Подкючаем генератор случайных чисел из C
     srand(time(NULL));
 
-    int width = 900;
+    int width = 800;
     int height = 600;
 
     int width_rand = genRandCords(width, 40);
@@ -60,7 +33,7 @@ int main() {
     int fruit_count = 0;
 
     RenderWindow window;
-    initWindow(window, width, height);
+    setWindow(window, width, height);
 
     Image icon;
     setIcon(icon, window);
@@ -73,6 +46,21 @@ int main() {
     apple.setPosition(450, 100);
     strawberry.setPosition(450, 200);
     snake_part.setPosition(450, 400);
+
+    RectangleShape box(Vector2f(80, 40));
+    box.setFillColor(Color::Black);
+    box.setOutlineColor(sf::Color::White);
+    box.setOutlineThickness(2);
+    box.setPosition(0, 0);
+
+    Font font;
+    setFont(font);
+
+    Text fruit_count_text;
+    fruit_count_text.setFont(font);
+    fruit_count_text.setCharacterSize(30);
+    fruit_count_text.setFillColor(Color::White);
+    fruit_count_text.setPosition(10, 0);
 
     RectangleShape snakeShape(Vector2f(40, 40));
     snakeShape.setFillColor(Color::Cyan);
@@ -119,29 +107,31 @@ int main() {
             height_rand = genRandCords(height, 40);
             apple.setPosition(width_rand, height_rand);
 
-            if (dir.choice == "Up") {
-                snake.push_back(snakeShape);
-                snake.back().setPosition(snake[0].getPosition().x, snake[0].getPosition().y + 40);
-                window.draw(snake.back());
-            }
-            else if (dir.choice == "Down") {
-                snake.push_back(snakeShape);
-                snake.back().setPosition(snake[0].getPosition().x, snake[0].getPosition().y - 40);
-                window.draw(snake.back());
-            }
-            else if (dir.choice == "Left") {
-                snake.push_back(snakeShape);
-                snake.back().setPosition(snake[0].getPosition().x+40, snake[0].getPosition().y);
-                window.draw(snake.back());
-            }
-            else if (dir.choice == "Right") {
-                snake.push_back(snakeShape);
-                snake.back().setPosition(snake[0].getPosition().x-40, snake[0].getPosition().y);
-                window.draw(snake.back());
-            }
+            //if (dir.choice == "Up") {
+            //    snake.push_back(snakeShape);
+            //    snake.back().setPosition(snake[0].getPosition().x, snake[0].getPosition().y + 40);
+            //    window.draw(snake.back());
+            //}
+            //else if (dir.choice == "Down") {
+            //    snake.push_back(snakeShape);
+            //    snake.back().setPosition(snake[0].getPosition().x, snake[0].getPosition().y - 40);
+            //    window.draw(snake.back());
+            //}
+            //else if (dir.choice == "Left") {
+            //    snake.push_back(snakeShape);
+            //    snake.back().setPosition(snake[0].getPosition().x+40, snake[0].getPosition().y);
+            //    window.draw(snake.back());
+            //}
+            //else if (dir.choice == "Right") {
+            //    snake.push_back(snakeShape);
+            //    snake.back().setPosition(snake[0].getPosition().x-40, snake[0].getPosition().y);
+            //    window.draw(snake.back());
+            //}
         }
 
-        cout << fruit_count;
+        wstringstream ss;
+        ss << fruit_count;
+        fruit_count_text.setString(ss.str());
 
         // Движение по стрелочкам
         if (dir.choice == "Up") {
@@ -165,11 +155,14 @@ int main() {
             snake[0].getPosition().x > (width-40) || snake[0].getPosition().y > (height-40)) {
             window.close();
         }
-
+        
         window.clear();
         window.draw(apple);
         window.draw(strawberry);
         window.draw(snake_part);
+
+        window.draw(box);
+        window.draw(fruit_count_text);
 
         for (auto& i : snake) {
             window.draw(i);
