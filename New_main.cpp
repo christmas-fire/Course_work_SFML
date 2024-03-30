@@ -1,4 +1,4 @@
-// Библиотеки C++
+    // Библиотеки C++
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <vector>
@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <time.h>
 
+    // Пространства имен
 using namespace std;
 using namespace sf;
 
@@ -72,12 +73,44 @@ int main() {
     snake[0].setPosition(width / 2, height / 2);
     snake_head.setPosition(width / 2, height / 2);
 
+    struct Direction {
+        string choice;
+    };
+    
+    Direction dir;
+    dir.choice = "Right";
+
     // Game loop
     while (window.isOpen()) {
         Event event;
         while (window.pollEvent(event)) {
-            if (event.type == Event::Closed)
+            if (event.type == Event::Closed) {
                 window.close();
+            }
+            else if (event.type == Event::KeyPressed) {
+                if (event.key.code == Keyboard::Up && dir.choice != "Down") {
+                    dir.choice = "Up";
+                }
+                else if (event.key.code == Keyboard::Down && dir.choice != "Up") {
+                    dir.choice = "Down";
+                }
+                else if (event.key.code == Keyboard::Left && dir.choice != "Right") {
+                    dir.choice = "Left";
+                }
+                else if (event.key.code == Keyboard::Right && dir.choice != "Left") {
+                    dir.choice = "Right";
+                }
+            }
+        }
+
+        if (dir.choice == "Up") {
+            snake[0].move(0, -5);
+        } else if (dir.choice == "Down") {
+            snake[0].move(0, 5);
+        } else if (dir.choice == "Left") {
+            snake[0].move(-5, 0);
+        } else if (dir.choice == "Right") {
+            snake[0].move(5, 0);
         }
 
         window.clear();
