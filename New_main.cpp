@@ -42,12 +42,20 @@ static void setTextures(Texture& texture_apple,
     }
 }
 
+    // Генерируем случайные координаты
+static int genRandCords(int window_side, int size) {
+    return rand() % (window_side - size);
+}
+
 int main() {
     // Подкючаем генератор случайных чисел из C
     srand(time(NULL));
 
     int width = 900;
     int height = 600;
+
+    int width_rand = genRandCords(width, 40);
+    int height_rand = genRandCords(height, 40);
 
     RenderWindow window;
     initWindow(window, width, height);
@@ -105,6 +113,13 @@ int main() {
                     dir.choice = "Right";
                 }
             }
+        }
+
+        // Если мы съедим фрукт
+        if (snake[0].getGlobalBounds().intersects(apple.getGlobalBounds())) {
+            width_rand = genRandCords(width, 40);
+            height_rand = genRandCords(height, 40);
+            apple.setPosition(width_rand, height_rand);
         }
 
         // Движение по стрелочкам
