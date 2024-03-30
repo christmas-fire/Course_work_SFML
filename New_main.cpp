@@ -61,8 +61,16 @@ int main() {
 
     apple.setPosition(450, 100);
     watermelon.setPosition(450, 200);
-    snake_head.setPosition(450, 300);
+    //snake_head.setPosition(450, 300);
     snake_part.setPosition(450, 400);
+
+    RectangleShape snakeShape(Vector2f(40, 40));
+    snakeShape.setFillColor(Color::Cyan);
+
+    vector <RectangleShape> snake;
+    snake.push_back(snakeShape);
+    snake[0].setPosition(width / 2, height / 2);
+    snake_head.setPosition(width / 2, height / 2);
 
     // Game loop
     while (window.isOpen()) {
@@ -75,8 +83,12 @@ int main() {
         window.clear();
         window.draw(apple);
         window.draw(watermelon);
-        window.draw(snake_head);
         window.draw(snake_part);
+
+        for (const auto& i : snake) {
+            window.draw(i);
+            window.draw(snake_head);
+        }
         window.display();
     }
 
