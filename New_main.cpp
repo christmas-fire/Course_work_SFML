@@ -57,6 +57,8 @@ int main() {
     int width_rand = genRandCords(width, 40);
     int height_rand = genRandCords(height, 40);
 
+    int fruit_count = 0;
+
     RenderWindow window;
     initWindow(window, width, height);
 
@@ -112,6 +114,7 @@ int main() {
 
          // Если мы съедим фрукт
         if (snake[0].getGlobalBounds().intersects(apple.getGlobalBounds())) {
+            fruit_count++;
             width_rand = genRandCords(width, 40);
             height_rand = genRandCords(height, 40);
             apple.setPosition(width_rand, height_rand);
@@ -138,6 +141,8 @@ int main() {
             }
         }
 
+        cout << fruit_count;
+
         // Движение по стрелочкам
         if (dir.choice == "Up") {
             snake[0].move(0, -5);
@@ -154,6 +159,11 @@ int main() {
         else if (dir.choice == "Right") {
             snake[0].move(5, 0);
             snake_head.move(5, 0);
+        }
+
+        if (snake[0].getPosition().x < 0 || snake[0].getPosition().y < 0 ||
+            snake[0].getPosition().x > (width-40) || snake[0].getPosition().y > (height-40)) {
+            window.close();
         }
 
         window.clear();
