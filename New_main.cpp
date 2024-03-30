@@ -17,6 +17,14 @@ static void initWindow(RenderWindow& window, int width, int height) {
     window.setFramerateLimit(60);
 }
 
+    // Задаем иконку
+static void setIcon(Image& icon, RenderWindow& window) {
+    if (!icon.loadFromFile("Icons/icon.png")) {
+        cerr << "Не загрузились иконки!" << endl;
+    }
+    window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
+}
+
     // Задаем текстуры
 static void setTextures(Texture& texture_apple,
                         Texture& texture_strawberry,
@@ -24,10 +32,10 @@ static void setTextures(Texture& texture_apple,
                         Texture& texture_snake_part
                         ) 
 {
-    if (!texture_apple.loadFromFile("apple.png") ||
-        !texture_strawberry.loadFromFile("strawberry.png") ||
-        !texture_snake_head.loadFromFile("snake_head.png") ||
-        !texture_snake_part.loadFromFile("snake_part.png"))
+    if (!texture_apple.loadFromFile("Sprites/apple.png") ||
+        !texture_strawberry.loadFromFile("Sprites/strawberry.png") ||
+        !texture_snake_head.loadFromFile("Sprites/snake_head.png") ||
+        !texture_snake_part.loadFromFile("Sprites/snake_part.png"))
     {
         cerr << "Не загрузились текстуры!" << endl;
     }
@@ -42,6 +50,9 @@ int main() {
 
     RenderWindow window;
     initWindow(window, width, height);
+
+    Image icon;
+    setIcon(icon, window);
 
     Texture texture_apple, texture_watermelon, texture_snake_head, texture_snake_part;
     setTextures(texture_apple, texture_watermelon, texture_snake_head, texture_snake_part);
