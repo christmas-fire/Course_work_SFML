@@ -63,14 +63,13 @@ int main() {
     Image icon;
     setIcon(icon, window);
 
-    Texture texture_apple, texture_watermelon, texture_snake_head, texture_snake_part;
-    setTextures(texture_apple, texture_watermelon, texture_snake_head, texture_snake_part);
+    Texture texture_apple, texture_strawberry, texture_snake_head, texture_snake_part;
+    setTextures(texture_apple, texture_strawberry, texture_snake_head, texture_snake_part);
 
-    Sprite apple(texture_apple), watermelon(texture_watermelon), snake_head(texture_snake_head), snake_part(texture_snake_part);
+    Sprite apple(texture_apple), strawberry(texture_strawberry), snake_head(texture_snake_head), snake_part(texture_snake_part);
 
     apple.setPosition(450, 100);
-    watermelon.setPosition(450, 200);
-    //snake_head.setPosition(450, 300);
+    strawberry.setPosition(450, 200);
     snake_part.setPosition(450, 400);
 
     RectangleShape snakeShape(Vector2f(40, 40));
@@ -80,10 +79,6 @@ int main() {
     snake.push_back(snakeShape);
     snake[0].setPosition(width / 2, height / 2);
     snake_head.setPosition(width / 2, height / 2);
-
-    snake.push_back(snakeShape);
-    snake[1].setPosition(snake[0].getPosition().x, snake[0].getPosition().y + 40);
-    snake[1].setFillColor(Color::Red);
 
     struct Direction {
         string choice;
@@ -115,36 +110,60 @@ int main() {
             }
         }
 
-        // Если мы съедим фрукт
+         // Если мы съедим фрукт
         if (snake[0].getGlobalBounds().intersects(apple.getGlobalBounds())) {
             width_rand = genRandCords(width, 40);
             height_rand = genRandCords(height, 40);
             apple.setPosition(width_rand, height_rand);
+
+            if (dir.choice == "Up") {
+                snake.push_back(snakeShape);
+                snake.back().setPosition(snake[0].getPosition().x, snake[0].getPosition().y + 40);
+                window.draw(snake.back());
+            }
+            else if (dir.choice == "Down") {
+                snake.push_back(snakeShape);
+                snake.back().setPosition(snake[0].getPosition().x, snake[0].getPosition().y - 40);
+                window.draw(snake.back());
+            }
+            else if (dir.choice == "Left") {
+                snake.push_back(snakeShape);
+                snake.back().setPosition(snake[0].getPosition().x+40, snake[0].getPosition().y);
+                window.draw(snake.back());
+            }
+            else if (dir.choice == "Right") {
+                snake.push_back(snakeShape);
+                snake.back().setPosition(snake[0].getPosition().x-40, snake[0].getPosition().y);
+                window.draw(snake.back());
+            }
         }
 
         // Движение по стрелочкам
         if (dir.choice == "Up") {
             snake[0].move(0, -5);
-            snake[1].move(0, -5);
-        } else if (dir.choice == "Down") {
+            snake_head.move(0, -5);
+        }
+        else if (dir.choice == "Down") {
             snake[0].move(0, 5);
-            snake[1].move(0, 5);
-        } else if (dir.choice == "Left") {
+            snake_head.move(0, 5);
+        }
+        else if (dir.choice == "Left") {
             snake[0].move(-5, 0);
-            snake[1].move(-5, 0);
-        } else if (dir.choice == "Right") {
+            snake_head.move(-5, 0);
+        }
+        else if (dir.choice == "Right") {
             snake[0].move(5, 0);
-            snake[1].move(5, 0);
+            snake_head.move(5, 0);
         }
 
         window.clear();
         window.draw(apple);
-        window.draw(watermelon);
+        window.draw(strawberry);
         window.draw(snake_part);
 
-        for (const auto& i : snake) {
+        for (auto& i : snake) {
             window.draw(i);
-            //window.draw(snake_head);
+            window.draw(snake_head);
         }
         window.display();
     }
