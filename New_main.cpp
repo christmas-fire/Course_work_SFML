@@ -10,10 +10,9 @@
 using namespace std;
 using namespace sf;
 
-
-// Создание окна
+    // Создаем окно
 static void initWindow(RenderWindow& window, int width, int height) {
-    RenderWindow window(VideoMode(width, height), L"Курсовая работа: Змейка");
+    window.create(VideoMode(width, height), L"Курсовая работа: Змейка");
     window.setVerticalSyncEnabled(true);
     window.setFramerateLimit(60);
 }
@@ -26,9 +25,19 @@ int main() {
     int height = 600;
 
     RenderWindow window;
-    initWindow()
+    initWindow(window, width, height);
 
+    // Game loop
+    while (window.isOpen()) {
+        Event event;
+        while (window.pollEvent(event)) {
+            if (event.type == Event::Closed)
+                window.close();
+        }
 
+        window.clear();
+        window.display();
+    }
 
     return 0;
 }
