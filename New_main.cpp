@@ -73,12 +73,16 @@ int main() {
     snake[0].setPosition(width / 2, height / 2);
     snake_head.setPosition(width / 2, height / 2);
 
+    snake.push_back(snakeShape);
+    snake[1].setPosition(snake[0].getPosition().x, snake[0].getPosition().y + 40);
+    snake[1].setFillColor(Color::Red);
+
     struct Direction {
         string choice;
     };
     
     Direction dir;
-    dir.choice = "Right";
+    dir.choice = "None";
 
     // Game loop
     while (window.isOpen()) {
@@ -103,14 +107,19 @@ int main() {
             }
         }
 
+        // Движение по стрелочкам
         if (dir.choice == "Up") {
             snake[0].move(0, -5);
+            snake[1].move(0, -5);
         } else if (dir.choice == "Down") {
             snake[0].move(0, 5);
+            snake[1].move(0, 5);
         } else if (dir.choice == "Left") {
             snake[0].move(-5, 0);
+            snake[1].move(-5, 0);
         } else if (dir.choice == "Right") {
             snake[0].move(5, 0);
+            snake[1].move(5, 0);
         }
 
         window.clear();
@@ -120,7 +129,7 @@ int main() {
 
         for (const auto& i : snake) {
             window.draw(i);
-            window.draw(snake_head);
+            //window.draw(snake_head);
         }
         window.display();
     }
