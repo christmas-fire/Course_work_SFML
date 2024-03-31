@@ -26,6 +26,30 @@ void setFont(Font& font) {
     }
 }
 
+// Задаем отображение счетчика
+void setCounter(Font& font, Text& fruit_count_text, RectangleShape& box) {
+    box.setFillColor(Color::Transparent);
+    box.setOutlineColor(sf::Color::White);
+    box.setOutlineThickness(2);
+    box.setPosition(0, 0);
+
+    fruit_count_text.setFont(font);
+    fruit_count_text.setCharacterSize(30);
+    fruit_count_text.setFillColor(Color::White);
+    fruit_count_text.setPosition(10, 0);
+}
+
+// Обновляем счетчик на экране
+void refreshCounter(Text& fruit_count_text, int fruit_count) {
+    wstringstream ss;
+    ss << fruit_count;
+    fruit_count_text.setString(ss.str());
+
+    if (fruit_count >= 10) {
+        fruit_count_text.setFillColor(Color::Yellow);
+    }
+}
+
 // Задаем иконку
 void setIcon(Image& icon, RenderWindow& window) {
     if (!icon.loadFromFile("Icons/icon.png")) {

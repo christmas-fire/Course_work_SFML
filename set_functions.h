@@ -18,6 +18,10 @@ void setWindow(RenderWindow& window, int width, int height);
 
 void setFont(Font& font);
 
+void setCounter(Font& font, Text& fruit_count_text, RectangleShape& box);
+
+void refreshCounter(Text& fruit_count_text, int fruit_count);
+
 void setIcon(Image& icon, RenderWindow& window);
 
 void setTextures(Texture& texture_apple,
