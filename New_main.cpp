@@ -43,33 +43,26 @@ int main() {
 
     Sprite apple(texture_apple), strawberry(texture_strawberry), snake_head(texture_snake_head), snake_part(texture_snake_part);
 
-    apple.setPosition(450, 100);
-    strawberry.setPosition(450, 200);
-    snake_part.setPosition(450, 400);
-
-    RectangleShape box(Vector2f(80, 40));
-    box.setFillColor(Color::Black);
-    box.setOutlineColor(sf::Color::White);
-    box.setOutlineThickness(2);
-    box.setPosition(0, 0);
+    strawberry.setPosition(width_rand, height_rand);
 
     Font font;
-    setFont(font);
-
     Text fruit_count_text;
-    fruit_count_text.setFont(font);
-    fruit_count_text.setCharacterSize(30);
-    fruit_count_text.setFillColor(Color::White);
-    fruit_count_text.setPosition(10, 0);
+    RectangleShape box(Vector2f(80, 40));
 
+    setFont(font);
+    setCounter(font, fruit_count_text, box);
+
+    // Задаем форму всем частям змейки
     RectangleShape snakeShape(Vector2f(40, 40));
     snakeShape.setFillColor(Color::Cyan);
 
+    // Создаем змейку
     vector <RectangleShape> snake;
     snake.push_back(snakeShape);
     snake[0].setPosition(width / 2, height / 2);
     snake_head.setPosition(width / 2, height / 2);
 
+    // Создаем направления
     struct Direction {
         string choice;
     };
@@ -101,11 +94,11 @@ int main() {
         }
 
          // Если мы съедим фрукт
-        if (snake[0].getGlobalBounds().intersects(apple.getGlobalBounds())) {
+        if (snake[0].getGlobalBounds().intersects(strawberry.getGlobalBounds())) {
             fruit_count++;
             width_rand = genRandCords(width, 40);
             height_rand = genRandCords(height, 40);
-            apple.setPosition(width_rand, height_rand);
+            strawberry.setPosition(width_rand, height_rand);
 
             //if (dir.choice == "Up") {
             //    snake.push_back(snakeShape);
@@ -129,9 +122,7 @@ int main() {
             //}
         }
 
-        wstringstream ss;
-        ss << fruit_count;
-        fruit_count_text.setString(ss.str());
+        refreshCounter(fruit_count_text, fruit_count);
 
         // Движение по стрелочкам
         if (dir.choice == "Up") {
@@ -151,16 +142,15 @@ int main() {
             snake_head.move(5, 0);
         }
 
+        // Закрываем окно при столкновении с границами окна
         if (snake[0].getPosition().x < 0 || snake[0].getPosition().y < 0 ||
             snake[0].getPosition().x > (width-40) || snake[0].getPosition().y > (height-40)) {
             window.close();
         }
         
+        // Отрисовываем объекты
         window.clear();
-        window.draw(apple);
         window.draw(strawberry);
-        window.draw(snake_part);
-
         window.draw(box);
         window.draw(fruit_count_text);
 
