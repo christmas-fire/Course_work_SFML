@@ -15,7 +15,7 @@ using namespace sf;
 // Создаем окно
 void setWindow(RenderWindow& window, int width, int height) {
     window.create(VideoMode(width, height), L"Курсовая работа: Змейка");
-    //window.setVerticalSyncEnabled(true);
+    window.setVerticalSyncEnabled(true);
     window.setFramerateLimit(60);
 }
 
@@ -36,7 +36,7 @@ void setCounter(Font& font, Text& fruit_count_text, RectangleShape& box) {
     fruit_count_text.setFont(font);
     fruit_count_text.setCharacterSize(30);
     fruit_count_text.setFillColor(Color::White);
-    fruit_count_text.setPosition(10, 0);
+    fruit_count_text.setPosition(40, 0);
 }
 
 // Обновляем счетчик на экране
@@ -63,7 +63,7 @@ void setTextures(Texture& texture_apple,
     Texture& texture_strawberry,
     Texture& texture_snake_head,
     Texture& texture_snake_part,
-    Texture& texture_mr_penis
+    Texture& texture_background_grey
 
 )
 {
@@ -71,7 +71,7 @@ void setTextures(Texture& texture_apple,
         !texture_strawberry.loadFromFile("Sprites/strawberry.png") ||
         !texture_snake_head.loadFromFile("Sprites/snake_head.png") ||
         !texture_snake_part.loadFromFile("Sprites/snake_part.png") ||
-        !texture_mr_penis.loadFromFile("Sprites/mr_penis.png"))
+        !texture_background_grey.loadFromFile("Sprites/background_grey.png"))
     {
         cerr << "Не загрузились текстуры!" << endl;
     }
