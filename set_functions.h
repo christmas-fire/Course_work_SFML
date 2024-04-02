@@ -27,7 +27,8 @@ void setIcon(Image& icon, RenderWindow& window);
 void setTextures(Texture& texture_apple,
                         Texture& texture_strawberry,
                         Texture& texture_snake_head,
-                        Texture& texture_snake_part
+                        Texture& texture_snake_part,
+                        Texture& texture_mr_penis
                         );
 
 
