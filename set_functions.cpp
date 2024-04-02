@@ -15,7 +15,7 @@ using namespace sf;
 // Создаем окно
 void setWindow(RenderWindow& window, int width, int height) {
     window.create(VideoMode(width, height), L"Курсовая работа: Змейка");
-    window.setVerticalSyncEnabled(true);
+    //window.setVerticalSyncEnabled(true);
     window.setFramerateLimit(60);
 }
 
@@ -62,13 +62,16 @@ void setIcon(Image& icon, RenderWindow& window) {
 void setTextures(Texture& texture_apple,
     Texture& texture_strawberry,
     Texture& texture_snake_head,
-    Texture& texture_snake_part
+    Texture& texture_snake_part,
+    Texture& texture_mr_penis
+
 )
 {
     if (!texture_apple.loadFromFile("Sprites/apple.png") ||
         !texture_strawberry.loadFromFile("Sprites/strawberry.png") ||
         !texture_snake_head.loadFromFile("Sprites/snake_head.png") ||
-        !texture_snake_part.loadFromFile("Sprites/snake_part.png"))
+        !texture_snake_part.loadFromFile("Sprites/snake_part.png") ||
+        !texture_mr_penis.loadFromFile("Sprites/mr_penis.png"))
     {
         cerr << "Не загрузились текстуры!" << endl;
     }
