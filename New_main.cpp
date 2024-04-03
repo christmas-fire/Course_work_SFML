@@ -203,6 +203,18 @@ int main() {
             window.close();
         }
 
+        // Закрываем окно при столкновении с самой собой
+        for (int i = 0; i < snake.size(); i++) {
+            for (int j = 0; j < snake.size(); j++) {
+                if (i == 0 && i != j) {
+                    if (snake[0].getGlobalBounds().intersects(snake[j].getGlobalBounds())) {
+                        window.close();
+                    }
+
+                }
+            }
+        }
+
         // Отрисовываем объекты
         window.draw(strawberry);
         window.draw(box);
