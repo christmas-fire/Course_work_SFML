@@ -1,5 +1,6 @@
 // Библиотеки C++
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <iostream>
 #include <vector>
 #include <sstream>
@@ -68,5 +69,11 @@ void setTextures(Texture& texture_apple,
         !texture_background.loadFromFile("Sprites/background.png"))
     {
         cerr << "Не загрузились текстуры!" << endl;
+    }
+}
+
+void setSound(SoundBuffer& buffer) {
+    if (!buffer.loadFromFile("Music/burping.ogg")) {
+        cerr << "Не загрузились звуки!" << endl;
     }
 }

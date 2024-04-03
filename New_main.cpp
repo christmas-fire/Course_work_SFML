@@ -1,5 +1,6 @@
 // Библиотеки C++
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <iostream>
 #include <vector>
 #include <sstream>
@@ -55,12 +56,11 @@ int main() {
     setFont(font);
     setCounter(font, fruit_count_text, box);
 
-    //RectangleShape game_border(Vector2f(800-4, 800-2));
-    //game_border.setFillColor(Color::Transparent);
-    //game_border.setOutlineColor(Color::Red);
-    //game_border.setOutlineThickness(2);
-    //game_border.setPosition(2, 2);
+    Sound sound;
+    SoundBuffer buffer;
 
+    setSound(buffer);
+    sound.setBuffer(buffer);
 
     // Задаем форму всем частям змейки
     RectangleShape snakeShape(Vector2f(40, 40));
@@ -136,6 +136,7 @@ int main() {
 
         // Если мы съедим фрукт
         if (snake[0].getGlobalBounds().intersects(strawberry.getGlobalBounds())) {
+            sound.play();
             fruit_count++;
             game_width_rand = genRandCords();
             game_height_rand = genRandCords();
@@ -203,7 +204,6 @@ int main() {
         }
 
         // Отрисовываем объекты
-        //window.draw(game_border);
         window.draw(strawberry);
         window.draw(box);
         window.draw(fruit_count_text);

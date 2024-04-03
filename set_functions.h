@@ -2,6 +2,7 @@
 
     // Библиотеки C++
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <iostream>
 #include <vector>
 #include <sstream>
@@ -31,4 +32,5 @@ void setTextures(Texture& texture_apple,
                         Texture& texture_background
                         );
 
+void setSound(SoundBuffer& buffer);
 
