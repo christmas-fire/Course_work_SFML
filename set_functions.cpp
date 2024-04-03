@@ -16,7 +16,7 @@ using namespace sf;
 void setWindow(RenderWindow& window, int width, int height) {
     window.create(VideoMode(width, height), L"Курсовая работа: Змейка");
     window.setVerticalSyncEnabled(true);
-    window.setFramerateLimit(60);
+    window.setFramerateLimit(15);
 }
 
 // Задаем шрифт
@@ -36,7 +36,7 @@ void setCounter(Font& font, Text& fruit_count_text, RectangleShape& box) {
     fruit_count_text.setFont(font);
     fruit_count_text.setCharacterSize(30);
     fruit_count_text.setFillColor(Color::White);
-    fruit_count_text.setPosition(40, 0);
+    fruit_count_text.setPosition(30, 0);
 }
 
 // Обновляем счетчик на экране
