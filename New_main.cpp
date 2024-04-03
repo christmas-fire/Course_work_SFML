@@ -16,41 +16,51 @@ using namespace sf;
 #include <set_functions.h>    
 
     // Генерируем случайные координаты
-int genRandCords(int window_side, int size) {
-    return rand() % (window_side - size);
+int genRandCords() {
+    return rand() % 20 * 40;
 }
 
 int main() {
     // Подкючаем генератор случайных чисел из C
     srand(time(NULL));
 
+    int width = 800;
+    int height = 850;
+
     int game_width = 800;
     int game_height = 800;
 
-    int game_width_rand = genRandCords(game_width, 40);
-    int game_height_rand = genRandCords(game_height, 40);
+    int game_width_rand = genRandCords();
+    int game_height_rand = genRandCords();
 
     int fruit_count = 0;
 
     RenderWindow window;
-    setWindow(window, game_width, game_height);
+    setWindow(window, width, height);
 
     Image icon;
     setIcon(icon, window);
 
-    Texture texture_apple, texture_strawberry, texture_snake_head, texture_snake_part, texture_background_grey;
-    setTextures(texture_apple, texture_strawberry, texture_snake_head, texture_snake_part, texture_background_grey);
+    Texture texture_apple, texture_strawberry, texture_snake_head, texture_snake_part, texture_background;
+    setTextures(texture_apple, texture_strawberry, texture_snake_head, texture_snake_part, texture_background);
 
-    Sprite apple(texture_apple), strawberry(texture_strawberry), snake_head(texture_snake_head), snake_part(texture_snake_part), background_grey(texture_background_grey);
+    Sprite apple(texture_apple), strawberry(texture_strawberry), snake_head(texture_snake_head), snake_part(texture_snake_part), background(texture_background);
 
     strawberry.setPosition(game_width_rand, game_height_rand);
 
     Font font;
     Text fruit_count_text;
-    RectangleShape box(Vector2f(80, 40));
+    RectangleShape box(Vector2f(800-4, 800-2));
 
     setFont(font);
     setCounter(font, fruit_count_text, box);
+
+    //RectangleShape game_border(Vector2f(800-4, 800-2));
+    //game_border.setFillColor(Color::Transparent);
+    //game_border.setOutlineColor(Color::Red);
+    //game_border.setOutlineThickness(2);
+    //game_border.setPosition(2, 2);
+
 
     // Задаем форму всем частям змейки
     RectangleShape snakeShape(Vector2f(40, 40));
@@ -92,6 +102,7 @@ int main() {
             }
         }
         window.clear();
+        window.draw(background);
 
         // Начинаем движение
         if (!gameIsRunning) {
@@ -126,8 +137,8 @@ int main() {
         // Если мы съедим фрукт
         if (snake[0].getGlobalBounds().intersects(strawberry.getGlobalBounds())) {
             fruit_count++;
-            game_width_rand = genRandCords(game_width, 40);
-            game_height_rand = genRandCords(game_height, 40);
+            game_width_rand = genRandCords();
+            game_height_rand = genRandCords();
             strawberry.setPosition(game_width_rand, game_height_rand);
 
             // Создаем новую часть змейки с условием от ее направления в момент съедения фрукта
@@ -192,6 +203,7 @@ int main() {
         }
 
         // Отрисовываем объекты
+        //window.draw(game_border);
         window.draw(strawberry);
         window.draw(box);
         window.draw(fruit_count_text);
