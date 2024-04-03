@@ -29,25 +29,21 @@ void setFont(Font& font) {
 // Задаем отображение счетчика
 void setCounter(Font& font, Text& fruit_count_text, RectangleShape& box) {
     box.setFillColor(Color::Transparent);
-    box.setOutlineColor(sf::Color::White);
+    box.setOutlineColor(sf::Color::Black);
     box.setOutlineThickness(2);
-    box.setPosition(0, 0);
+    box.setPosition(2, 2);
 
     fruit_count_text.setFont(font);
     fruit_count_text.setCharacterSize(30);
     fruit_count_text.setFillColor(Color::White);
-    fruit_count_text.setPosition(30, 0);
+    fruit_count_text.setPosition(270, 805);
 }
 
 // Обновляем счетчик на экране
 void refreshCounter(Text& fruit_count_text, int fruit_count) {
     wstringstream ss;
-    ss << fruit_count;
+    ss << L"Съедено фруктов: " << fruit_count;
     fruit_count_text.setString(ss.str());
-
-    if (fruit_count >= 10) {
-        fruit_count_text.setFillColor(Color::Yellow);
-    }
 }
 
 // Задаем иконку
@@ -63,15 +59,13 @@ void setTextures(Texture& texture_apple,
     Texture& texture_strawberry,
     Texture& texture_snake_head,
     Texture& texture_snake_part,
-    Texture& texture_background_grey
-
-)
+    Texture& texture_background)                                    
 {
     if (!texture_apple.loadFromFile("Sprites/apple.png") ||
         !texture_strawberry.loadFromFile("Sprites/strawberry.png") ||
         !texture_snake_head.loadFromFile("Sprites/snake_head.png") ||
         !texture_snake_part.loadFromFile("Sprites/snake_part.png") ||
-        !texture_background_grey.loadFromFile("Sprites/background_grey.png"))
+        !texture_background.loadFromFile("Sprites/background.png"))
     {
         cerr << "Не загрузились текстуры!" << endl;
     }
