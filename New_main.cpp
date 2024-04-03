@@ -1,5 +1,6 @@
 // Библиотеки C++
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <iostream>
 #include <vector>
 #include <sstream>
@@ -70,8 +71,13 @@ int main() {
     Direction dir;
     dir.choice = "None";
 
+    Clock clock;
+    const float delay = 0.01f;
+    float timer = 0;
+
     // Game loop
     while (window.isOpen()) {
+        clock.restart();
         Event event;
         while (window.pollEvent(event)) {
             if (event.type == Event::Closed) {
@@ -92,56 +98,69 @@ int main() {
                 }
             }
         }
+        float time = clock.getElapsedTime().asSeconds();
+        clock.restart();
+        timer += time;
 
-        // Если мы съедим фрукт
-        if (snake[0].getGlobalBounds().intersects(strawberry.getGlobalBounds())) {
-            fruit_count++;
-            width_rand = genRandCords(width, 40);
-            height_rand = genRandCords(height, 40);
-            strawberry.setPosition(width_rand, height_rand);
+        if (timer >= delay) {
+            // Если мы съедим фрукт
+            if (snake[0].getGlobalBounds().intersects(strawberry.getGlobalBounds())) {
+                fruit_count++;
+                width_rand = genRandCords(width, 40);
+                height_rand = genRandCords(height, 40);
+                strawberry.setPosition(width_rand, height_rand);
 
-            //if (dir.choice == "Up") {
-            //    snake.push_back(snakeShape);
-            //    snake.back().setPosition(snake[0].getPosition().x, snake[0].getPosition().y + 40);
-            //    window.draw(snake.back());
-            //}
-            //else if (dir.choice == "Down") {
-            //    snake.push_back(snakeShape);
-            //    snake.back().setPosition(snake[0].getPosition().x, snake[0].getPosition().y - 40);
-            //    window.draw(snake.back());
-            //}
-            //else if (dir.choice == "Left") {
-            //    snake.push_back(snakeShape);
-            //    snake.back().setPosition(snake[0].getPosition().x+40, snake[0].getPosition().y);
-            //    window.draw(snake.back());
-            //}
-            //else if (dir.choice == "Right") {
-            //    snake.push_back(snakeShape);
-            //    snake.back().setPosition(snake[0].getPosition().x-40, snake[0].getPosition().y);
-            //    window.draw(snake.back());
-            //}
-        }
+                if (dir.choice == "Up") {
+                    snake.push_back(snakeShape);
+                    snake.back().setPosition(snake[0].getPosition().x, snake[0].getPosition().y + 80);
+                    window.draw(snake.back());
+                }
+                else if (dir.choice == "Down") {
+                    snake.push_back(snakeShape);
+                    snake.back().setPosition(snake[0].getPosition().x, snake[0].getPosition().y - 40);
+                    window.draw(snake.back());
+                }
+                else if (dir.choice == "Left") {
+                    snake.push_back(snakeShape);
+                    snake.back().setPosition(snake[0].getPosition().x + 80, snake[0].getPosition().y);
+                    window.draw(snake.back());
+                }
+                else if (dir.choice == "Right") {
+                    snake.push_back(snakeShape);
+                    snake.back().setPosition(snake[0].getPosition().x - 40, snake[0].getPosition().y);
+                    window.draw(snake.back());
+                }
+            }
 
-        refreshCounter(fruit_count_text, fruit_count);
+            refreshCounter(fruit_count_text, fruit_count);
 
-        // Движение по стрелочкам
-        if (dir.choice == "Up") {
-            snake[0].move(0, -5);
-            snake_head.move(0, -5);
-        }
-        else if (dir.choice == "Down") {
-            snake[0].move(0, 5);
-            snake_head.move(0, 5);
-        }
-        else if (dir.choice == "Left") {
-            snake[0].move(-5, 0);
-            snake_head.move(-5, 0);
-        }
-        else if (dir.choice == "Right") {
-            snake[0].move(5, 0);
-            snake_head.move(5, 0);
-        }
+            // Движение по стрелочкам
+            if (dir.choice == "Up") {
+                snake[0].move(0, -40);
+                snake_head.move(0, -40);
+            }
+            else if (dir.choice == "Down") {
+                snake[0].move(0, 40);
+                snake_head.move(0, 40);
+            }
+            else if (dir.choice == "Left") {
+                snake[0].move(-40, 0);
+                snake_head.move(-40, 0);
+            }
+            else if (dir.choice == "Right") {
+                snake[0].move(40, 0);
+                snake_head.move(40, 0);
+            }
 
+            // Движение частей змейки друг за другом
+            for (int i = snake.size() - 1; i > 0; i--) {
+                snake[i].setPosition(snake[i - 1].getPosition().x + 20, snake[i - 1].getPosition().y + 20);
+                snake_part.setPosition(snake[i - 1].getPosition().x + 20, snake[i - 1].getPosition().y + 20);
+                window.draw(snake_part);
+            }
+
+            timer = 0;
+        }
         // Закрываем окно при столкновении с границами окна
         if (snake[0].getPosition().x < 0 || snake[0].getPosition().y < 0 ||
             snake[0].getPosition().x >(width - 40) || snake[0].getPosition().y >(height - 40)) {
