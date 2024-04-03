@@ -15,8 +15,8 @@ using namespace sf;
 // Создаем окно
 void setWindow(RenderWindow& window, int width, int height) {
     window.create(VideoMode(width, height), L"Курсовая работа: Змейка");
-    //window.setVerticalSyncEnabled(true);
-    //window.setFramerateLimit(60);
+    window.setVerticalSyncEnabled(true);
+    window.setFramerateLimit(15);
 }
 
 // Задаем шрифт
