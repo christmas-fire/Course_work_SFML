@@ -1,17 +1,18 @@
 #pragma once
 
-    // Библиотеки C++
+// Библиотеки C++
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <iostream>
 #include <vector>
 #include <sstream>
+#include <fstream>
 
-    // Библиотеки C
+// Библиотеки C
 #include <stdlib.h>
 #include <time.h>
 
-    // Пространства имен
+// Пространства имен
 using namespace std;
 using namespace sf;
 
@@ -28,14 +29,27 @@ void refreshCounter(Text& fruit_count_text, int fruit_count);
 void setIcon(Image& icon, RenderWindow& window);
 
 void setTextures(Texture& texture_apple,
-                        Texture& texture_strawberry,
-                        Texture& texture_snake_head,
-                        Texture& texture_snake_part,
-                        Texture& texture_background
-                        );
+                 Texture& texture_strawberry,
+                 Texture& texture_snake_head,
+                 Texture& texture_snake_part,
+                 Texture& texture_background);
 
 void setSound(SoundBuffer& buffer);
 
-void setMenu(RectangleShape& menu_box, Text& menu_text_title, Text& menu_text_pressToStart, Font& font);
+void setMenu(RectangleShape& menu_box,
+             Text& menu_text_title,
+             Text& menu_text_pressToStart,
+             Font& font);
 
-void setFailScreen(RectangleShape& fail_screen_box, Text& fail_screen_text, Text& fail_screen_pressToExit, Font& font, int fruit_count);
+void setFailScreen(RectangleShape& fail_screen_box,
+                   Text& fail_screen_text,
+                   Text& fail_screen_pressToExit,
+                   Text& fail_screen_pressToStats,
+                   Text& fail_screen_pressToRestart,
+                   Font& font,
+                   int fruit_count);
+
+void setStats(RectangleShape& stats_box,
+              Text& stats_text,
+              Font& font,
+              int fruit_count);

@@ -4,27 +4,43 @@
 #include <iostream>
 #include <vector>
 #include <sstream>
+#include <fstream>
 
-    // Библиотеки C
+// Библиотеки C
 #include <stdlib.h>
 #include <time.h>
 
-    // Пространства имен
+// Пространства имен
 using namespace std;
 using namespace sf;
 
 // Заголовочные файлы
 #include <set_functions.h>    
 
-    // Генерируем случайные координаты
+// Генерируем случайные координаты
 int genRandCords() {
-    return rand() % 20 * 40;
+    return (rand() % 20) * 40;
+}
+
+// Записывем результат игры в файл.txt
+void pushStats(int fruit_count) {
+    ofstream file("stats.txt");
+
+    if (file.is_open()) {
+        file << fruit_count;
+        file.close();
+        cout << "Значение переменной успешно записано в файл." << endl;
+    }
+    else {
+        cerr << "Ошибка открытия файла." << endl;
+    }
 }
 
 int main() {
     // Подкючаем RNG из C
     srand(time(NULL));
 
+    // Локальные переменные
     int width = 800;
     int height = 840;
 
@@ -36,13 +52,15 @@ int main() {
 
     int fruit_count = 0;
 
-    // "Булевы" переменные, которые отслеживают начало/конец игры
     bool gameIsRunning = false;
     bool isMenu = true;
     bool isEnterPressed = false;
     bool gameIsFailed = false;
     bool isEscPressed = false;
+    bool isRPressed = false;
+    bool isSPressed = false;
 
+    // Иннициализируем объекты/вывзываем функции для создания объектов на экране
     RenderWindow window;
     setWindow(window, width, height);
 
@@ -71,19 +89,25 @@ int main() {
     setSound(buffer);
     sound.setBuffer(buffer);
 
-    // Задаем объекты для меню
+    // Иннициализируем объекты для меню
     RectangleShape menu_box(Vector2f(16*40, 8*40));
     Text menu_text_title;
     Text menu_text_pressToStart;
 
     setMenu(menu_box, menu_text_title, menu_text_pressToStart, font);
 
-    // Задаем объекты для экрана конца игры
+    // Иннициализируем объекты для экрана конца игры
     RectangleShape fail_screen_box(Vector2f(16 * 40, 8 * 40));
     Text fail_screen_text;
     Text fail_screen_pressToExit;
+    Text fail_screen_pressToStats;
+    Text fail_screen_pressToRestart;
 
-    setFailScreen(fail_screen_box, fail_screen_text, fail_screen_pressToExit, font, fruit_count);
+    setFailScreen(fail_screen_box, fail_screen_text, fail_screen_pressToExit, fail_screen_pressToStats, fail_screen_pressToRestart, font, fruit_count);
+
+    // Иннициализируем объекты для окна статистики
+    RectangleShape stats_box(Vector2f(6 * 40, 3 * 40));
+    Text stats_text;
 
     // Задаем "форму" всем частям змейки
     RectangleShape snakeShape(Vector2f(40, 40));
@@ -93,13 +117,13 @@ int main() {
     vector <RectangleShape> snake;
     vector <Sprite> snake_sprite;
 
-    // Создаем голову
+    // Создаем голову змейки
     snake.push_back(snakeShape);
     snake_sprite.push_back(snake_head);
     snake[0].setPosition(game_width / 2, game_height / 2);
     snake_sprite[0].setPosition(game_width / 2, game_height / 2);
     
-    // Создаем хвост
+    // Создаем хвост змейки
     snake.push_back(snakeShape);
     snake_sprite.push_back(snake_part);
     snake[1].setPosition((game_width / 2) - 40, game_height / 2);
@@ -113,9 +137,9 @@ int main() {
     Direction dir;
     dir.choice = "None";
 
-//------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
- 
-    // Game loop
+                                        //Game loop//
+//-----------------------------------------------------------------------------------------------//
+                                        //Game loop//
     while (window.isOpen()) {
         Event event;
         while (window.pollEvent(event)) {
@@ -127,6 +151,7 @@ int main() {
         window.draw(background);
         window.draw(border);
 
+        // Отрисовка элементов меню
         if (isMenu) {
             window.draw(menu_box);
             window.draw(menu_text_title);
@@ -139,8 +164,8 @@ int main() {
             isEnterPressed = true;
         }
 
+        // Начинаем игру
         if (isEnterPressed) {
-            // Начинаем движение
             if (!gameIsRunning) {
                 if (Keyboard::isKeyPressed(Keyboard::Right)) {
                     gameIsRunning = true;
@@ -190,7 +215,6 @@ int main() {
                     snake.back().setPosition(snake[snake.size() - 2].getPosition().x, snake[snake.size() - 2].getPosition().y - 40);
                     snake_sprite.push_back(snake_part);
                     snake_sprite.back().setPosition(snake_sprite[snake_sprite.size() - 2].getPosition().x, snake_sprite[snake_sprite.size() - 2].getPosition().y - 40);
-
                 }
                 else if (dir.choice == "Left") {
                     snake.push_back(snakeShape);
@@ -232,21 +256,19 @@ int main() {
                 snake_sprite[0].move(40, 0);
             }
 
-            // Закрываем окно при столкновении с границами окна
+            // Завершаем игру при столкновении с границами окна
             if (snake[0].getPosition().x < 0 || snake[0].getPosition().y < 0 ||
                 snake[0].getPosition().x >(game_width - 40) || snake[0].getPosition().y >(game_height - 40)) {
-                //window.close();
                 gameIsFailed = true;
             }
 
-            // Закрываем окно при столкновении с самой собой
+            // Завершаем игру при столкновении головы змейки с телом
             for (int i = 0; i < snake.size(); i++) {
                 for (int j = 0; j < snake.size(); j++) {
                     if (i == 0 && i != j) {
                         if (snake[0].getGlobalBounds().intersects(snake[j].getGlobalBounds())) {
-                            window.close();
+                            gameIsFailed = true;
                         }
-
                     }
                 }
             }
@@ -256,8 +278,29 @@ int main() {
                 window.draw(fail_screen_box);
                 window.draw(fail_screen_text);
                 window.draw(fail_screen_pressToExit);
+                window.draw(fail_screen_pressToStats);
+                window.draw(fail_screen_pressToRestart);
+
+                pushStats(fruit_count); // Отправляем результат в текстовый файл
+
                 if (Keyboard::isKeyPressed(Keyboard::Escape)) {
                     isEscPressed = true;
+                }
+                else if (Keyboard::isKeyPressed(Keyboard::R)) {
+                    isRPressed = true;
+                }
+                else if (Keyboard::isKeyPressed(Keyboard::S)) {
+                    isSPressed = true;
+                }
+
+                if (isSPressed) {
+                    setStats(stats_box, stats_text, font, fruit_count);
+                    window.draw(stats_box);
+                    window.draw(stats_text);
+
+                }
+                if (isRPressed) {
+                    //
                 }
             }
 
@@ -270,7 +313,6 @@ int main() {
                 for (auto i : snake) {
                     window.draw(i);
                 }
-
                 // Отрисовываем спрайты змейки
                 for (auto i : snake_sprite) {
                     window.draw(i);
