@@ -38,3 +38,4 @@ void setSound(SoundBuffer& buffer);
 
 void setMenu(RectangleShape& menu_box, Text& menu_text_title, Text& menu_text_pressToStart, Font& font);
 
+void setFailScreen(RectangleShape& fail_screen_box, Text& fail_screen_text, Text& fail_screen_pressToExit, Font& font, int fruit_count);

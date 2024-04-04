@@ -36,11 +36,12 @@ int main() {
 
     int fruit_count = 0;
 
-    // "Булевы" переменные, которые отслеживают начало игры
+    // "Булевы" переменные, которые отслеживают начало/конец игры
     bool gameIsRunning = false;
     bool isMenu = true;
     bool isEnterPressed = false;
-    //bool gameIsFailed = false;
+    bool gameIsFailed = false;
+    bool isEscPressed = false;
 
     RenderWindow window;
     setWindow(window, width, height);
@@ -71,11 +72,18 @@ int main() {
     sound.setBuffer(buffer);
 
     // Задаем объекты для меню
-    RectangleShape menu_box(Vector2f(8*40, 4*40));
+    RectangleShape menu_box(Vector2f(16*40, 8*40));
     Text menu_text_title;
     Text menu_text_pressToStart;
 
     setMenu(menu_box, menu_text_title, menu_text_pressToStart, font);
+
+    // Задаем объекты для экрана конца игры
+    RectangleShape fail_screen_box(Vector2f(16 * 40, 8 * 40));
+    Text fail_screen_text;
+    Text fail_screen_pressToExit;
+
+    setFailScreen(fail_screen_box, fail_screen_text, fail_screen_pressToExit, font, fruit_count);
 
     // Задаем "форму" всем частям змейки
     RectangleShape snakeShape(Vector2f(40, 40));
@@ -105,6 +113,8 @@ int main() {
     Direction dir;
     dir.choice = "None";
 
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
+ 
     // Game loop
     while (window.isOpen()) {
         Event event;
@@ -225,7 +235,8 @@ int main() {
             // Закрываем окно при столкновении с границами окна
             if (snake[0].getPosition().x < 0 || snake[0].getPosition().y < 0 ||
                 snake[0].getPosition().x >(game_width - 40) || snake[0].getPosition().y >(game_height - 40)) {
-                window.close();
+                //window.close();
+                gameIsFailed = true;
             }
 
             // Закрываем окно при столкновении с самой собой
@@ -240,18 +251,34 @@ int main() {
                 }
             }
 
-            // Отрисовываем объекты
-            window.draw(strawberry);
-            window.draw(fruit_count_text);
-
-            // Отрисовываем части змейки
-            for (auto i : snake) {
-                window.draw(i);
+            // Экран конца игры
+            if (gameIsFailed) {
+                window.draw(fail_screen_box);
+                window.draw(fail_screen_text);
+                window.draw(fail_screen_pressToExit);
+                if (Keyboard::isKeyPressed(Keyboard::Escape)) {
+                    isEscPressed = true;
+                }
             }
 
-            // Отрисовываем спрайты змейки
-            for (auto i : snake_sprite) {
-                window.draw(i);
+            if (!gameIsFailed) {
+                // Отрисовываем объекты
+                window.draw(strawberry);
+                window.draw(fruit_count_text);
+
+                // Отрисовываем части змейки
+                for (auto i : snake) {
+                    window.draw(i);
+                }
+
+                // Отрисовываем спрайты змейки
+                for (auto i : snake_sprite) {
+                    window.draw(i);
+                }
+            }
+
+            if (isEscPressed) {
+                window.close();
             }
         }
         window.display();

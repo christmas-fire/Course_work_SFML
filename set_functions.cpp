@@ -27,6 +27,7 @@ void setFont(Font& font) {
     }
 }
 
+// Задаем границы игрового поля
 void setBorder(RectangleShape& border) {
     border.setFillColor(Color::Transparent);
     border.setOutlineColor(sf::Color::White);
@@ -81,22 +82,39 @@ void setSound(SoundBuffer& buffer) {
 }
 
 void setMenu(RectangleShape& menu_box, Text& menu_text_title, Text& menu_text_pressToStart, Font& font) {
-    menu_box.setPosition(6 * 40, 2 * 40);
+    menu_box.setPosition(2 * 40, 6 * 40);
     menu_box.setFillColor(Color::Black);
     menu_box.setOutlineColor(Color::White);
     menu_box.setOutlineThickness(2);
 
     menu_text_title.setFont(font);
-    menu_text_title.setPosition((7 * 40) - 10, (3 * 40) - 10);
-    menu_text_title.setCharacterSize(50);
+    menu_text_title.setPosition(3*40, 8*40);
+    menu_text_title.setCharacterSize(100);
     menu_text_title.setFillColor(Color::White);
     menu_text_title.setString("SnakeGame");
 
     menu_text_pressToStart.setFont(font);
-    menu_text_pressToStart.setPosition((7 * 40) - 10, (4 * 40) + 15);
-    menu_text_pressToStart.setCharacterSize(20);
+    menu_text_pressToStart.setPosition(3*40, 11*40);
+    menu_text_pressToStart.setCharacterSize(30);
     menu_text_pressToStart.setFillColor(Color::White);
     menu_text_pressToStart.setString("Press 'Enter' to start");
+}
 
+void setFailScreen(RectangleShape& fail_screen_box, Text& fail_screen_text, Text& fail_screen_pressToExit, Font& font, int fruit_count) {
+    fail_screen_box.setPosition(2 * 40, 6 * 40);
+    fail_screen_box.setFillColor(Color::Black);
+    fail_screen_box.setOutlineColor(Color::White);
+    fail_screen_box.setOutlineThickness(2);
 
+    fail_screen_text.setFont(font);
+    fail_screen_text.setPosition(4 * 40, 8 * 40);
+    fail_screen_text.setCharacterSize(100);
+    fail_screen_text.setFillColor(Color::White);
+    fail_screen_text.setString("You've lost");
+
+    fail_screen_pressToExit.setFont(font);
+    fail_screen_pressToExit.setPosition(4 * 40, 11 * 40);
+    fail_screen_pressToExit.setCharacterSize(30);
+    fail_screen_pressToExit.setFillColor(Color::White);
+    fail_screen_pressToExit.setString("Press 'Esc' to exit");
 }
