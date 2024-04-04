@@ -17,7 +17,7 @@ using namespace sf;
 void setWindow(RenderWindow& window, int width, int height) {
     window.create(VideoMode(width, height), L"Курсовая работа: Змейка");
     window.setVerticalSyncEnabled(true);
-    window.setFramerateLimit(15);
+    window.setFramerateLimit(10);
 }
 
 // Задаем шрифт
@@ -27,17 +27,19 @@ void setFont(Font& font) {
     }
 }
 
-// Задаем отображение счетчика
-void setCounter(Font& font, Text& fruit_count_text, RectangleShape& box) {
-    box.setFillColor(Color::Transparent);
-    box.setOutlineColor(sf::Color::Black);
-    box.setOutlineThickness(2);
-    box.setPosition(2, 2);
+void setBorder(RectangleShape& border) {
+    border.setFillColor(Color::Transparent);
+    border.setOutlineColor(sf::Color::White);
+    border.setOutlineThickness(2);
+    border.setPosition(2, 2);
+}
 
+// Задаем отображение счетчика
+void setCounter(Font& font, Text& fruit_count_text) {
     fruit_count_text.setFont(font);
-    fruit_count_text.setCharacterSize(30);
+    fruit_count_text.setCharacterSize(28);
     fruit_count_text.setFillColor(Color::White);
-    fruit_count_text.setPosition(270, 805);
+    fruit_count_text.setPosition(270, 800);
 }
 
 // Обновляем счетчик на экране
@@ -76,4 +78,25 @@ void setSound(SoundBuffer& buffer) {
     if (!buffer.loadFromFile("Music/burping.ogg")) {
         cerr << "Не загрузились звуки!" << endl;
     }
+}
+
+void setMenu(RectangleShape& menu_box, Text& menu_text_title, Text& menu_text_pressToStart, Font& font) {
+    menu_box.setPosition(6 * 40, 2 * 40);
+    menu_box.setFillColor(Color::Black);
+    menu_box.setOutlineColor(Color::White);
+    menu_box.setOutlineThickness(2);
+
+    menu_text_title.setFont(font);
+    menu_text_title.setPosition((7 * 40) - 10, (3 * 40) - 10);
+    menu_text_title.setCharacterSize(50);
+    menu_text_title.setFillColor(Color::White);
+    menu_text_title.setString("SnakeGame");
+
+    menu_text_pressToStart.setFont(font);
+    menu_text_pressToStart.setPosition((7 * 40) - 10, (4 * 40) + 15);
+    menu_text_pressToStart.setCharacterSize(20);
+    menu_text_pressToStart.setFillColor(Color::White);
+    menu_text_pressToStart.setString("Press 'Enter' to start");
+
+
 }

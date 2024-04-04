@@ -19,7 +19,9 @@ void setWindow(RenderWindow& window, int width, int height);
 
 void setFont(Font& font);
 
-void setCounter(Font& font, Text& fruit_count_text, RectangleShape& box);
+void setBorder(RectangleShape& border);
+
+void setCounter(Font& font, Text& fruit_count_text);
 
 void refreshCounter(Text& fruit_count_text, int fruit_count);
 
@@ -33,4 +35,6 @@ void setTextures(Texture& texture_apple,
                         );
 
 void setSound(SoundBuffer& buffer);
+
+void setMenu(RectangleShape& menu_box, Text& menu_text_title, Text& menu_text_pressToStart, Font& font);
 

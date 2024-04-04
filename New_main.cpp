@@ -22,11 +22,11 @@ int genRandCords() {
 }
 
 int main() {
-    // Подкючаем генератор случайных чисел из C
+    // Подкючаем RNG из C
     srand(time(NULL));
 
     int width = 800;
-    int height = 850;
+    int height = 840;
 
     int game_width = 800;
     int game_height = 800;
@@ -36,11 +36,20 @@ int main() {
 
     int fruit_count = 0;
 
+    // "Булевы" переменные, которые отслеживают начало игры
+    bool gameIsRunning = false;
+    bool isMenu = true;
+    bool isEnterPressed = false;
+    //bool gameIsFailed = false;
+
     RenderWindow window;
     setWindow(window, width, height);
 
     Image icon;
     setIcon(icon, window);
+
+    RectangleShape border(Vector2f(800 - 4, 800 - 2));
+    setBorder(border);
 
     Texture texture_apple, texture_strawberry, texture_snake_head, texture_snake_part, texture_background;
     setTextures(texture_apple, texture_strawberry, texture_snake_head, texture_snake_part, texture_background);
@@ -51,10 +60,9 @@ int main() {
 
     Font font;
     Text fruit_count_text;
-    RectangleShape box(Vector2f(800-4, 800-2));
 
     setFont(font);
-    setCounter(font, fruit_count_text, box);
+    setCounter(font, fruit_count_text);
 
     Sound sound;
     SoundBuffer buffer;
@@ -62,7 +70,14 @@ int main() {
     setSound(buffer);
     sound.setBuffer(buffer);
 
-    // Задаем форму всем частям змейки
+    // Задаем объекты для меню
+    RectangleShape menu_box(Vector2f(8*40, 4*40));
+    Text menu_text_title;
+    Text menu_text_pressToStart;
+
+    setMenu(menu_box, menu_text_title, menu_text_pressToStart, font);
+
+    // Задаем "форму" всем частям змейки
     RectangleShape snakeShape(Vector2f(40, 40));
     snakeShape.setFillColor(Color::Magenta);
 
@@ -90,9 +105,6 @@ int main() {
     Direction dir;
     dir.choice = "None";
 
-    // "Булева" переменная, которая отслеживает начало игры
-    int gameIsRunning = 0;
-
     // Game loop
     while (window.isOpen()) {
         Event event;
@@ -103,135 +115,146 @@ int main() {
         }
         window.clear();
         window.draw(background);
+        window.draw(border);
 
-        // Начинаем движение
-        if (!gameIsRunning) {
-            if (Keyboard::isKeyPressed(Keyboard::Right)) {
-                gameIsRunning = 1;
-                dir.choice = "Right";
-            }
-            else if (Keyboard::isKeyPressed(Keyboard::Up)) {
-                gameIsRunning = 1;
-                dir.choice = "Up";
-            }
-            else if (Keyboard::isKeyPressed(Keyboard::Down)) {
-                gameIsRunning = 1;
-                dir.choice = "Down";
-            }
-        }
-        else {
-            if (Keyboard::isKeyPressed(Keyboard::Up) && dir.choice != "Down") {
-                dir.choice = "Up";
-            }
-            else if (Keyboard::isKeyPressed(Keyboard::Down) && dir.choice != "Up") {
-                dir.choice = "Down";
-            }
-            else if (Keyboard::isKeyPressed(Keyboard::Left) && dir.choice != "Right") {
-                dir.choice = "Left";
-            }
-            else if (Keyboard::isKeyPressed(Keyboard::Right) && dir.choice != "Left") {
-                dir.choice = "Right";
-            }
+        if (isMenu) {
+            window.draw(menu_box);
+            window.draw(menu_text_title);
+            window.draw(menu_text_pressToStart);
         }
 
-        // Если мы съедим фрукт
-        if (snake[0].getGlobalBounds().intersects(strawberry.getGlobalBounds())) {
-            sound.play();
-            fruit_count++;
-            game_width_rand = genRandCords();
-            game_height_rand = genRandCords();
-            strawberry.setPosition(game_width_rand, game_height_rand);
-
-            // Создаем новую часть змейки с условием от ее направления в момент съедения фрукта
-            if (dir.choice == "Up") {
-                snake.push_back(snakeShape);
-                snake.back().setPosition(snake[snake.size() - 2].getPosition().x, snake[snake.size() - 2].getPosition().y + 40);
-                snake_sprite.push_back(snake_part);
-                snake_sprite.back().setPosition(snake_sprite[snake_sprite.size() - 2].getPosition().x, snake_sprite[snake_sprite.size() - 2].getPosition().y + 40);
-            }
-            else if (dir.choice == "Down") {
-                snake.push_back(snakeShape);
-                snake.back().setPosition(snake[snake.size() - 2].getPosition().x, snake[snake.size() - 2].getPosition().y - 40);
-                snake_sprite.push_back(snake_part);
-                snake_sprite.back().setPosition(snake_sprite[snake_sprite.size() - 2].getPosition().x, snake_sprite[snake_sprite.size() - 2].getPosition().y - 40);
-
-            }
-            else if (dir.choice == "Left") {
-                snake.push_back(snakeShape);
-                snake.back().setPosition(snake[snake.size() - 2].getPosition().x + 40, snake[snake.size() - 2].getPosition().y);
-                snake_sprite.push_back(snake_part);
-                snake_sprite.back().setPosition(snake_sprite[snake_sprite.size() - 2].getPosition().x+40, snake_sprite[snake_sprite.size() - 2].getPosition().y);
-            }
-            else if (dir.choice == "Right") {
-                snake.push_back(snakeShape);
-                snake.back().setPosition(snake[snake.size() - 2].getPosition().x - 40, snake[snake.size() - 2].getPosition().y);
-                snake_sprite.push_back(snake_part);
-                snake_sprite.back().setPosition(snake_sprite[snake_sprite.size() - 2].getPosition().x - 40, snake_sprite[snake_sprite.size() - 2].getPosition().y);
-            }
+        // Выходим из меню после нажатия на Enter
+        if (Keyboard::isKeyPressed(Keyboard::Enter)) {
+            isMenu = false;
+            isEnterPressed = true;
         }
 
-        refreshCounter(fruit_count_text, fruit_count);
-
-        // Движение частей змейки друг за другом
-        if (dir.choice != "None")
-            for (int i = snake.size() - 1; i > 0; i--) {
-                snake[i].setPosition(snake[i - 1].getPosition().x, snake[i - 1].getPosition().y);
-                snake_sprite[i].setPosition(snake_sprite[i - 1].getPosition().x, snake_sprite[i - 1].getPosition().y);
-            }
-
-        // Движение по стрелочкам
-        if (dir.choice == "Up") {
-            snake[0].move(0, -40);
-            snake_sprite[0].move(0, -40);
-        }
-        else if (dir.choice == "Down") {
-            snake[0].move(0, 40);
-            snake_sprite[0].move(0, 40);
-        }
-        else if (dir.choice == "Left") {
-            snake[0].move(-40, 0);
-            snake_sprite[0].move(-40, 0);
-        }
-        else if (dir.choice == "Right") {
-            snake[0].move(40, 0);
-            snake_sprite[0].move(40, 0);
-        }
-
-        // Закрываем окно при столкновении с границами окна
-        if (snake[0].getPosition().x < 0 || snake[0].getPosition().y < 0 ||
-            snake[0].getPosition().x >(game_width - 40) || snake[0].getPosition().y >(game_height - 40)) {
-            window.close();
-        }
-
-        // Закрываем окно при столкновении с самой собой
-        for (int i = 0; i < snake.size(); i++) {
-            for (int j = 0; j < snake.size(); j++) {
-                if (i == 0 && i != j) {
-                    if (snake[0].getGlobalBounds().intersects(snake[j].getGlobalBounds())) {
-                        window.close();
-                    }
-
+        if (isEnterPressed) {
+            // Начинаем движение
+            if (!gameIsRunning) {
+                if (Keyboard::isKeyPressed(Keyboard::Right)) {
+                    gameIsRunning = true;
+                    dir.choice = "Right";
+                }
+                else if (Keyboard::isKeyPressed(Keyboard::Up)) {
+                    gameIsRunning = true;
+                    dir.choice = "Up";
+                }
+                else if (Keyboard::isKeyPressed(Keyboard::Down)) {
+                    gameIsRunning = true;
+                    dir.choice = "Down";
                 }
             }
+            else {
+                if (Keyboard::isKeyPressed(Keyboard::Up) && dir.choice != "Down") {
+                    dir.choice = "Up";
+                }
+                else if (Keyboard::isKeyPressed(Keyboard::Down) && dir.choice != "Up") {
+                    dir.choice = "Down";
+                }
+                else if (Keyboard::isKeyPressed(Keyboard::Left) && dir.choice != "Right") {
+                    dir.choice = "Left";
+                }
+                else if (Keyboard::isKeyPressed(Keyboard::Right) && dir.choice != "Left") {
+                    dir.choice = "Right";
+                }
+            }
+
+            // Если мы съедим фрукт
+            if (snake[0].getGlobalBounds().intersects(strawberry.getGlobalBounds())) {
+                sound.play();
+                fruit_count++;
+                game_width_rand = genRandCords();
+                game_height_rand = genRandCords();
+                strawberry.setPosition(game_width_rand, game_height_rand);
+
+                // Создаем новую часть змейки с условием от ее направления в момент съедения фрукта
+                if (dir.choice == "Up") {
+                    snake.push_back(snakeShape);
+                    snake.back().setPosition(snake[snake.size() - 2].getPosition().x, snake[snake.size() - 2].getPosition().y + 40);
+                    snake_sprite.push_back(snake_part);
+                    snake_sprite.back().setPosition(snake_sprite[snake_sprite.size() - 2].getPosition().x, snake_sprite[snake_sprite.size() - 2].getPosition().y + 40);
+                }
+                else if (dir.choice == "Down") {
+                    snake.push_back(snakeShape);
+                    snake.back().setPosition(snake[snake.size() - 2].getPosition().x, snake[snake.size() - 2].getPosition().y - 40);
+                    snake_sprite.push_back(snake_part);
+                    snake_sprite.back().setPosition(snake_sprite[snake_sprite.size() - 2].getPosition().x, snake_sprite[snake_sprite.size() - 2].getPosition().y - 40);
+
+                }
+                else if (dir.choice == "Left") {
+                    snake.push_back(snakeShape);
+                    snake.back().setPosition(snake[snake.size() - 2].getPosition().x + 40, snake[snake.size() - 2].getPosition().y);
+                    snake_sprite.push_back(snake_part);
+                    snake_sprite.back().setPosition(snake_sprite[snake_sprite.size() - 2].getPosition().x + 40, snake_sprite[snake_sprite.size() - 2].getPosition().y);
+                }
+                else if (dir.choice == "Right") {
+                    snake.push_back(snakeShape);
+                    snake.back().setPosition(snake[snake.size() - 2].getPosition().x - 40, snake[snake.size() - 2].getPosition().y);
+                    snake_sprite.push_back(snake_part);
+                    snake_sprite.back().setPosition(snake_sprite[snake_sprite.size() - 2].getPosition().x - 40, snake_sprite[snake_sprite.size() - 2].getPosition().y);
+                }
+            }
+            refreshCounter(fruit_count_text, fruit_count);
+
+            // Движение частей змейки друг за другом
+            if (dir.choice != "None")
+                for (int i = snake.size() - 1; i > 0; i--) {
+                    snake[i].setPosition(snake[i - 1].getPosition().x, snake[i - 1].getPosition().y);
+                    snake_sprite[i].setPosition(snake_sprite[i - 1].getPosition().x, snake_sprite[i - 1].getPosition().y);
+                }
+
+            // Движение по стрелочкам
+            if (dir.choice == "Up") {
+                snake[0].move(0, -40);
+                snake_sprite[0].move(0, -40);
+            }
+            else if (dir.choice == "Down") {
+                snake[0].move(0, 40);
+                snake_sprite[0].move(0, 40);
+            }
+            else if (dir.choice == "Left") {
+                snake[0].move(-40, 0);
+                snake_sprite[0].move(-40, 0);
+            }
+            else if (dir.choice == "Right") {
+                snake[0].move(40, 0);
+                snake_sprite[0].move(40, 0);
+            }
+
+            // Закрываем окно при столкновении с границами окна
+            if (snake[0].getPosition().x < 0 || snake[0].getPosition().y < 0 ||
+                snake[0].getPosition().x >(game_width - 40) || snake[0].getPosition().y >(game_height - 40)) {
+                window.close();
+            }
+
+            // Закрываем окно при столкновении с самой собой
+            for (int i = 0; i < snake.size(); i++) {
+                for (int j = 0; j < snake.size(); j++) {
+                    if (i == 0 && i != j) {
+                        if (snake[0].getGlobalBounds().intersects(snake[j].getGlobalBounds())) {
+                            window.close();
+                        }
+
+                    }
+                }
+            }
+
+            // Отрисовываем объекты
+            window.draw(strawberry);
+            window.draw(fruit_count_text);
+
+            // Отрисовываем части змейки
+            for (auto i : snake) {
+                window.draw(i);
+            }
+
+            // Отрисовываем спрайты змейки
+            for (auto i : snake_sprite) {
+                window.draw(i);
+            }
         }
-
-        // Отрисовываем объекты
-        window.draw(strawberry);
-        window.draw(box);
-        window.draw(fruit_count_text);
-
-        // Отрисовываем части змейки
-        for (auto i : snake) {
-            window.draw(i);
-        }
-
-        // Отрисовываем спрайты змейки
-        for (auto i : snake_sprite) {
-            window.draw(i);
-        }
-
         window.display();
     }
-
     return 0;
 }
