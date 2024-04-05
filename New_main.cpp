@@ -52,15 +52,19 @@ int main() {
 
     int fruit_count = 0;
 
-    bool gameIsRunning = false;
+    bool isFirstMove = false;
     bool isMenu = true;
-    bool isEnterPressed = false;
+    bool gameIsStarted = false;
     bool gameIsFailed = false;
     bool isEscPressed = false;
     bool isRPressed = false;
     bool isSPressed = false;
 
     // Иннициализируем объекты/вывзываем функции для создания объектов на экране
+    //do
+    //{
+
+    //} while (isRPressed);
     RenderWindow window;
     setWindow(window, width, height);
 
@@ -148,11 +152,13 @@ int main() {
             }
         }
         window.clear();
-        window.draw(background);
-        window.draw(border);
+        //window.draw(background);
+        //window.draw(border);
 
         // Отрисовка элементов меню
         if (isMenu) {
+            window.draw(background);
+            window.draw(border);
             window.draw(menu_box);
             window.draw(menu_text_title);
             window.draw(menu_text_pressToStart);
@@ -161,36 +167,45 @@ int main() {
         // Выходим из меню после нажатия на Enter
         if (Keyboard::isKeyPressed(Keyboard::Enter)) {
             isMenu = false;
-            isEnterPressed = true;
+            gameIsStarted = true;
         }
 
         // Начинаем игру
-        if (isEnterPressed) {
-            if (!gameIsRunning) {
-                if (Keyboard::isKeyPressed(Keyboard::Right)) {
-                    gameIsRunning = true;
+        if (gameIsStarted) {
+            // Начинаем движение
+            if (!isFirstMove) {
+                if (Keyboard::isKeyPressed(Keyboard::Right) || Keyboard::isKeyPressed(Keyboard::D)) {
+                    isFirstMove = true;
                     dir.choice = "Right";
                 }
-                else if (Keyboard::isKeyPressed(Keyboard::Up)) {
-                    gameIsRunning = true;
+                else if (Keyboard::isKeyPressed(Keyboard::Up) || Keyboard::isKeyPressed(Keyboard::W)) {
+                    isFirstMove = true;
                     dir.choice = "Up";
                 }
-                else if (Keyboard::isKeyPressed(Keyboard::Down)) {
-                    gameIsRunning = true;
+                else if (Keyboard::isKeyPressed(Keyboard::Down) || Keyboard::isKeyPressed(Keyboard::S)) {
+                    isFirstMove = true;
                     dir.choice = "Down";
                 }
             }
             else {
-                if (Keyboard::isKeyPressed(Keyboard::Up) && dir.choice != "Down") {
+                if (Keyboard::isKeyPressed(Keyboard::Up) && dir.choice != "Down" ||
+                    Keyboard::isKeyPressed(Keyboard::W) && dir.choice != "Down")
+                {
                     dir.choice = "Up";
                 }
-                else if (Keyboard::isKeyPressed(Keyboard::Down) && dir.choice != "Up") {
+                else if (Keyboard::isKeyPressed(Keyboard::Down) && dir.choice != "Up" ||
+                         Keyboard::isKeyPressed(Keyboard::S) && dir.choice != "Up")
+                {
                     dir.choice = "Down";
                 }
-                else if (Keyboard::isKeyPressed(Keyboard::Left) && dir.choice != "Right") {
+                else if (Keyboard::isKeyPressed(Keyboard::Left) && dir.choice != "Right" ||
+                         Keyboard::isKeyPressed(Keyboard::A) && dir.choice != "Right")
+                {
                     dir.choice = "Left";
                 }
-                else if (Keyboard::isKeyPressed(Keyboard::Right) && dir.choice != "Left") {
+                else if (Keyboard::isKeyPressed(Keyboard::Right) && dir.choice != "Left" ||
+                         Keyboard::isKeyPressed(Keyboard::D) && dir.choice != "Left")
+                {
                     dir.choice = "Right";
                 }
             }
@@ -275,6 +290,8 @@ int main() {
 
             // Экран конца игры
             if (gameIsFailed) {
+                window.draw(background);
+                window.draw(border);
                 window.draw(fail_screen_box);
                 window.draw(fail_screen_text);
                 window.draw(fail_screen_pressToExit);
@@ -292,20 +309,12 @@ int main() {
                 else if (Keyboard::isKeyPressed(Keyboard::S)) {
                     isSPressed = true;
                 }
-
-                if (isSPressed) {
-                    setStats(stats_box, stats_text, font, fruit_count);
-                    window.draw(stats_box);
-                    window.draw(stats_text);
-
-                }
-                if (isRPressed) {
-                    //
-                }
             }
 
             if (!gameIsFailed) {
                 // Отрисовываем объекты
+                window.draw(background);
+                window.draw(border);
                 window.draw(strawberry);
                 window.draw(fruit_count_text);
 
@@ -321,6 +330,14 @@ int main() {
 
             if (isEscPressed) {
                 window.close();
+            }
+            if (isSPressed) {
+                setStats(stats_box, stats_text, font, fruit_count);
+                window.draw(stats_box);
+                window.draw(stats_text);
+            }
+            if (isRPressed) {
+                //
             }
         }
         window.display();

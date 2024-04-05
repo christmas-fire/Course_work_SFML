@@ -21,11 +21,12 @@ void setWindow(RenderWindow& window, int width, int height) {
     window.setFramerateLimit(10);
 }
 
-// Задаем шрифт
-void setFont(Font& font) {
-    if (!font.loadFromFile("Fonts/Roboto-Medium.ttf")) {
-        cerr << "Не загрузился шрифт!" << endl;
+// Задаем иконку
+void setIcon(Image& icon, RenderWindow& window) {
+    if (!icon.loadFromFile("Icons/icon.png")) {
+        cerr << "Не загрузились иконки!" << endl;
     }
+    window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 }
 
 // Задаем границы игрового поля
@@ -34,29 +35,6 @@ void setBorder(RectangleShape& border) {
     border.setOutlineColor(sf::Color::White);
     border.setOutlineThickness(2);
     border.setPosition(2, 2);
-}
-
-// Задаем отображение счетчика
-void setCounter(Font& font, Text& fruit_count_text) {
-    fruit_count_text.setFont(font);
-    fruit_count_text.setCharacterSize(28);
-    fruit_count_text.setFillColor(Color::White);
-    fruit_count_text.setPosition(300, 800);
-}
-
-// Обновляем счетчик на экране
-void refreshCounter(Text& fruit_count_text, int fruit_count) {
-    wstringstream ss;
-    ss << "Fruits eaten: " << fruit_count;
-    fruit_count_text.setString(ss.str());
-}
-
-// Задаем иконку
-void setIcon(Image& icon, RenderWindow& window) {
-    if (!icon.loadFromFile("Icons/icon.png")) {
-        cerr << "Не загрузились иконки!" << endl;
-    }
-    window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 }
 
 // Задаем текстуры
@@ -76,6 +54,14 @@ void setTextures(Texture& texture_apple,
     }
 }
 
+// Задаем шрифт
+void setFont(Font& font) {
+    if (!font.loadFromFile("Fonts/Roboto-Medium.ttf")) {
+        cerr << "Не загрузился шрифт!" << endl;
+    }
+}
+
+// Задаем звуки
 void setSound(SoundBuffer& buffer) {
     if (!buffer.loadFromFile("Music/burping.ogg")) {
         cerr << "Не загрузились звуки!" << endl;
@@ -161,4 +147,19 @@ void setStats(RectangleShape& stats_box,
     string str = to_string(fruit_count);
     string res = "Your score: " + str;
     stats_text.setString(res);
+}
+
+// Задаем отображение счетчика
+void setCounter(Font& font, Text& fruit_count_text) {
+    fruit_count_text.setFont(font);
+    fruit_count_text.setCharacterSize(28);
+    fruit_count_text.setFillColor(Color::White);
+    fruit_count_text.setPosition(390, 800);
+}
+
+// Обновляем счетчик на экране
+void refreshCounter(Text& fruit_count_text, int fruit_count) {
+    wstringstream ss;
+    ss << fruit_count;
+    fruit_count_text.setString(ss.str());
 }
