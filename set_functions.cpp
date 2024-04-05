@@ -14,7 +14,7 @@
 using namespace std;
 using namespace sf;
 
-// Создаем окно
+// Задаем окно
 void setWindow(RenderWindow& window, int& width, int& height) {
     window.create(VideoMode(width, height), "SnakeGame");
     window.setVerticalSyncEnabled(true);
@@ -68,6 +68,7 @@ void setSound(SoundBuffer& buffer) {
     }
 }
 
+// Задаем меню
 void setMenu(RectangleShape& menu_box,
              Text& menu_text_title,
              Text& menu_text_pressToStart,
@@ -91,6 +92,7 @@ void setMenu(RectangleShape& menu_box,
     menu_text_pressToStart.setString("Press 'Enter' to start");
 }
 
+// Задаем экран конца игры
 void setFailScreen(RectangleShape& fail_screen_box,
                    Text& fail_screen_text,
                    Text& fail_screen_pressToExit,
@@ -129,6 +131,7 @@ void setFailScreen(RectangleShape& fail_screen_box,
     fail_screen_pressToRestart.setString("Press 'R' to resrart");
 }
 
+// Задаем отображение статистики 
 void setStats(RectangleShape& stats_box,
               Text& stats_text,
               Font& font,
@@ -164,6 +167,7 @@ void refreshCounter(Text& fruit_count_text, int& fruit_count) {
     fruit_count_text.setString(ss.str());
 }
 
+// Перезапускаем игру
 void resetGame(int& fruit_count,
                int& game_width,
                int& game_height,
@@ -184,7 +188,6 @@ void resetGame(int& fruit_count,
     gameIsStarted = false;
     gameIsFailed = false;
 
-    // Создаем змейку заново
     RectangleShape snakeShape(Vector2f(40, 40));
     snakeShape.setFillColor(Color::Magenta);
     snake.push_back(snakeShape);
@@ -192,7 +195,6 @@ void resetGame(int& fruit_count,
     snake[0].setPosition(game_width / 2, game_height / 2);
     snake[1].setPosition((game_width / 2) - 40, game_height / 2);
 
-    // Создаем голову змейки заново
     snake_sprite.push_back(snake_head);
     snake_sprite.push_back(snake_part);
     snake_sprite[0].setPosition(game_width / 2, game_height / 2);

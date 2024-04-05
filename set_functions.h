@@ -18,21 +18,17 @@ using namespace sf;
 
 void setWindow(RenderWindow& window, int& width, int& height);
 
-void setFont(Font& font);
+void setIcon(Image& icon, RenderWindow& window);
 
 void setBorder(RectangleShape& border);
-
-void setCounter(Font& font, Text& fruit_count_text);
-
-void refreshCounter(Text& fruit_count_text, int& fruit_count);
-
-void setIcon(Image& icon, RenderWindow& window);
 
 void setTextures(Texture& texture_apple,
                  Texture& texture_strawberry,
                  Texture& texture_snake_head,
                  Texture& texture_snake_part,
                  Texture& texture_background);
+
+void setFont(Font& font);
 
 void setSound(SoundBuffer& buffer);
 
@@ -53,6 +49,11 @@ void setStats(RectangleShape& stats_box,
               Text& stats_text,
               Font& font,
               int& fruit_count);
+
+void setCounter(Font& font, Text& fruit_count_text);
+
+void refreshCounter(Text& fruit_count_text, int& fruit_count);
+
 
 void resetGame(int& fruit_count,
     int& game_width,
