@@ -15,7 +15,7 @@ using namespace std;
 using namespace sf;
 
 // Создаем окно
-void setWindow(RenderWindow& window, int width, int height) {
+void setWindow(RenderWindow& window, int& width, int& height) {
     window.create(VideoMode(width, height), "SnakeGame");
     window.setVerticalSyncEnabled(true);
     window.setFramerateLimit(10);
@@ -97,7 +97,7 @@ void setFailScreen(RectangleShape& fail_screen_box,
                    Text& fail_screen_pressToStats,
                    Text& fail_screen_pressToRestart,
                    Font& font,
-                   int fruit_count) 
+                   int& fruit_count) 
 {
     fail_screen_box.setPosition(2 * 40, 6 * 40);
     fail_screen_box.setFillColor(Color::Black);
@@ -132,7 +132,7 @@ void setFailScreen(RectangleShape& fail_screen_box,
 void setStats(RectangleShape& stats_box,
               Text& stats_text,
               Font& font,
-              int fruit_count)
+              int& fruit_count)
 {
     stats_box.setPosition(7 * 40, 16 * 40);
     stats_box.setFillColor(Color::Black);
@@ -158,8 +158,43 @@ void setCounter(Font& font, Text& fruit_count_text) {
 }
 
 // Обновляем счетчик на экране
-void refreshCounter(Text& fruit_count_text, int fruit_count) {
+void refreshCounter(Text& fruit_count_text, int& fruit_count) {
     wstringstream ss;
     ss << fruit_count;
     fruit_count_text.setString(ss.str());
+}
+
+void resetGame(int& fruit_count,
+               int& game_width,
+               int& game_height,
+               vector<RectangleShape>& snake,
+               vector<Sprite>& snake_sprite,
+               Sprite& snake_head,
+               Sprite& snake_part,
+               bool& isMenu,
+               bool& isFirstMove,
+               bool& gameIsStarted,
+               bool& gameIsFailed) 
+{
+    fruit_count = 0;
+    snake.clear();
+    snake_sprite.clear();
+    isMenu = true;
+    isFirstMove = false;
+    gameIsStarted = false;
+    gameIsFailed = false;
+
+    // Создаем змейку заново
+    RectangleShape snakeShape(Vector2f(40, 40));
+    snakeShape.setFillColor(Color::Magenta);
+    snake.push_back(snakeShape);
+    snake.push_back(snakeShape);
+    snake[0].setPosition(game_width / 2, game_height / 2);
+    snake[1].setPosition((game_width / 2) - 40, game_height / 2);
+
+    // Создаем голову змейки заново
+    snake_sprite.push_back(snake_head);
+    snake_sprite.push_back(snake_part);
+    snake_sprite[0].setPosition(game_width / 2, game_height / 2);
+    snake_sprite[1].setPosition((game_width / 2) - 40, game_height / 2);
 }
