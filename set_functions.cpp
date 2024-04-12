@@ -200,3 +200,21 @@ void resetGame(int& fruit_count,
     snake_sprite[0].setPosition(game_width / 2, game_height / 2);
     snake_sprite[1].setPosition((game_width / 2) - 40, game_height / 2);
 }
+
+// Генерируем случайные координаты
+int genRandCords() {
+    return (rand() % 20) * 40;
+}
+
+// Задаем координаты в том случае если они не равны координатам какой-либо из частей змейки
+void setStrawberry(vector<RectangleShape>& snake, Sprite& strawberry) {
+    int x = genRandCords();
+    int y = genRandCords();
+    for (auto i : snake) {
+        if (i.getGlobalBounds() == strawberry.getGlobalBounds()) {
+            x = genRandCords();
+            y = genRandCords();
+        }
+        strawberry.setPosition(x, y);
+    }
+}

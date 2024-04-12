@@ -54,7 +54,6 @@ void setCounter(Font& font, Text& fruit_count_text);
 
 void refreshCounter(Text& fruit_count_text, int& fruit_count);
 
-
 void resetGame(int& fruit_count,
     int& game_width,
     int& game_height,
@@ -66,3 +65,7 @@ void resetGame(int& fruit_count,
     bool& isFirstMove,
     bool& gameIsStarted,
     bool& gameIsFailed);
+
+int genRandCords();
+
+void setStrawberry(vector<RectangleShape>& snake, Sprite& strawberry);

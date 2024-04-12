@@ -17,11 +17,6 @@ using namespace sf;
 // Заголовочные файлы
 #include <set_functions.h>    
 
-// Генерируем случайные координаты
-int genRandCords() {
-    return (rand() % 20) * 40;
-}
-
 int main() {
     // Подкючаем RNG из C
     srand(time(NULL));
@@ -160,13 +155,13 @@ int main() {
                     dir.choice = "Right";
                 }
                 else if (Keyboard::isKeyPressed(Keyboard::Up) ||
-                            Keyboard::isKeyPressed(Keyboard::W)) 
+                         Keyboard::isKeyPressed(Keyboard::W)) 
                 {
                     isFirstMove = true;
                     dir.choice = "Up";
                 }
                 else if (Keyboard::isKeyPressed(Keyboard::Down) ||
-                            Keyboard::isKeyPressed(Keyboard::S)) 
+                         Keyboard::isKeyPressed(Keyboard::S)) 
                 {
                     isFirstMove = true;
                     dir.choice = "Down";
@@ -179,17 +174,17 @@ int main() {
                     dir.choice = "Up";
                 }
                 else if (Keyboard::isKeyPressed(Keyboard::Down) && dir.choice != "Up" ||
-                    Keyboard::isKeyPressed(Keyboard::S) && dir.choice != "Up")
+                         Keyboard::isKeyPressed(Keyboard::S) && dir.choice != "Up")
                 {
                     dir.choice = "Down";
                 }
                 else if (Keyboard::isKeyPressed(Keyboard::Left) && dir.choice != "Right" ||
-                    Keyboard::isKeyPressed(Keyboard::A) && dir.choice != "Right")
+                         Keyboard::isKeyPressed(Keyboard::A) && dir.choice != "Right")
                 {
                     dir.choice = "Left";
                 }
                 else if (Keyboard::isKeyPressed(Keyboard::Right) && dir.choice != "Left" ||
-                    Keyboard::isKeyPressed(Keyboard::D) && dir.choice != "Left")
+                         Keyboard::isKeyPressed(Keyboard::D) && dir.choice != "Left")
                 {
                     dir.choice = "Right";
                 }
@@ -199,9 +194,8 @@ int main() {
             if (snake[0].getGlobalBounds().intersects(strawberry.getGlobalBounds())) {
                 sound.play();
                 fruit_count++;
-                game_width_rand = genRandCords();
-                game_height_rand = genRandCords();
-                strawberry.setPosition(game_width_rand, game_height_rand);
+
+                setStrawberry(snake, strawberry);
 
                 // Создаем новую часть змейки с условием от ее направления в момент съедения фрукта
                 if (dir.choice == "Up") {
